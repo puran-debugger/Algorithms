@@ -10,7 +10,7 @@
 - Describe basic graph algorithms, including network flow, and utilize them in solving new problems
 - Differentiate the complexity classes P, NP, and NP-complete, and be able to show problems NP-complete
 
-[Syllabus](https://d18ky98rnyall9.cloudfront.net/rdrEZ3GwThuaxGdxsJ4b3w_bf1f58e52fd5475ca18f0b9a95cbfaf1_CIT-596---Syllabus---Summer-2021.pdf?Expires=1620950400&Signature=kB4GARKS70Q6werWr8h85OivHLMR3WI7OqpE5529LrDKGLg-1Edo0I~3JIYIE6DPqmc652zenr-5juSxDIUXwn-Jr969WOlXaNcWhu8Pf1yS9IsQrelJj~lByajXUEgDC0mo9aPxjfwuf8bHcZa-5vlZ5mK02e~CUaeGCfcxakE_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A)
+[Syllabus](https://d18ky98rnyall9.cloudfront.net/12rr2CVKSXKq69glSmly7A_cb4355cbe7c943ed8a75a072a6cbfaf1_CIT-596---Syllabus---Summer-2021_v2.pdf?Expires=1621296000&Signature=Ktp0kdZXxblgpDr4h5fbRC5OLhXHkICi~f-HxMMO4lMr7HQVJFXxbVCr8vYdotKPMC5EzdBStO6F~MEo-lYcLNSMvLACFiVP13LuBrvF-WmAFVUkogtrFoxo42ZLGCBLQrFwRyx-CAgAOkso3b0IJzbMGqyAF70Q-GPwEcPGqoY_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A)
 
 - 14 Quick Quizzes: 10%
 - 7 Individual Assignments: 55%
@@ -25,7 +25,27 @@ The first module of this course begins by situating the study of algorithms on a
 Learning Objectives
 - Summarize the algorithms for max-subinterval sum.
 - Analyze the running time of nested loop code fragments.
-- Explain how to use asymptotic notation and asymptotic analysis.
+- Explain how to use asymptotic 渐进 notation and asymptotic analysis.
+
+### Model of Computation
+Asymptotics: Growth rate of functions without regard to constants
+
+* Worst-case complexity：growth rate of function $f(n)$ is max time algorithm takes on any input of length n
+* **Big-Oh**: $\leq$ upper bound 
+    * $f(𝑛) = O(g(n))$ if $f(𝑛) \leq k g(n)$ for $n \geq n_0$ for connstants $k, n_0$
+    * $f(n)$ grows no faster than $g(n)$
+    * little oh: $lim_{n \rightarrow \infty}  \frac{f(n)}{g(n)}=0$
+        * $log(n)= o(n)$<br>
+        $lim_{n \rightarrow \infty} \frac{log(n)}{n}= lim_{n \rightarrow \infty} \frac{1/n}{1}=0$
+* **Big-Omega**: $\geq$ lower bound
+    * $g(𝑛) = \Omega(f(n))$ if $g(𝑛) \geq k f(n)$ for $n \geq n_0$ for connstants $k, n_0$
+    * $g(n)$ grows no slower than $f(n)$
+    * ! Lower bounds are also for the worst case!
+* **tight bound**:
+    * If we have an upper bound $f(n)$ and lower bound $g(n)$ on an algorithm’s running time and $f(n)=O(g(n))$ then we have a tight bound, We say the algorithm runs in time $\theta(f(n))$ in this case
+    * $f(n)= \theta(g(n))$ if $k_1g(n) \leq f(n) \leq k_2g(n)$
+
+### Subinterval of Maximum Sum
 
 ### Leetcode
 #### 53 Maximum Subarray
