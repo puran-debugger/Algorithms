@@ -1,6 +1,7 @@
 
-**Algorithms**
-@ Prof. Sampath Kannan, Prof. Arvind Bhusnurmath  from Penn
+**Algorithms**<br>
+Course Structure: @ Prof. Sampath Kannan, Prof. Arvind Bhusnurmath from University of Pennsylvania<br>
+Additional Content: @ Prof. Bob Sedgewick, Prof. Kevin Wayne from Princeton University<br>
 ```Java
 @ Note by Puran Zhang
 ```
@@ -62,6 +63,20 @@ Asymptotics: Growth rate of functions without regard to constants
 * **Big-Theta** $\Theta$ **tight bound**:
     * If we have an upper bound $f(n)$ and lower bound $g(n)$ on an algorithm’s running time and $f(n)=O(g(n))$ then we have a tight bound, We say the algorithm runs in time $\theta(f(n))$ in this case
     * $f(n)= \theta(g(n))$ if $k_1g(n) \leq f(n) \leq k_2g(n)$
+    
+ 
+**Increasing order of asymptotic complexity:**<br>
+$c < ln(n) = log(n^5)< (log n )^5 < \sqrt{n} < log(2^n) = n < nloglogn < log(n!) = nlog(n)< nlog^2n< n^{1.5}  < 2^n = 2^{n+1} < 3^n< 2^{2n}$
+
+
+Proof:<br>
+As we know $n!> e^n$ (n items, for most item of $n!$ is always bigger than e), then $log(n!)> log(e^n)= n$<br>
+$\because log(n!)= log1 + \cdots + logn \leq log(n^n)= n  \cdot log(n) \therefore log(n!) \leq nlogn$<br>
+$\because log(1) + ... log(n/2)+ ... + log(n) \geq log(n/2)+ ... + log(n) \geq log(n/2) + ... log(n/2) = \frac{n}{2}\cdot log(n/2)$<br>
+$\therefore \frac{n}{2}\cdot log(n/2) \leq log(n!) \leq nlogn$<br>
+By Squeeze Theorem, $log(n!) = nlog(n)$
+
+By L Hopital's rule, $ lim_{n \rightarrow \infty} \frac{\sqrt{n}}{log(2^n)}= lim_{n \rightarrow \infty} \frac{1}{2 \sqrt{n} nln(2)}< 1$, we get $ \sqrt{n} < log(2^n)$
 
 ### Find Subinterval of Maximum Sum
 Given a one dimensional array that may contain both positive and negative integers, find the sum of contiguous subarray of numbers which has the largest sum.
@@ -89,6 +104,9 @@ for i=1 to n
     
 return max Best(i)
 ```
+
+* The best divide-and-conquer algorithm for the maximum-sum-subinterval selection problem takes time $Θ(n log n)$. Does it follow that a lower bound for this problem is $Ω(n log n)$. Justify your answer.
+    * Just because one particular algorithm has a lower bound of Ω(n log n) it doesn’t follow that this is a lower bound for the problem. In fact, we have seen another algorithm that solves the problem in $O(n)$ time; so $Ω(n log n)$ cannot be a lower bound.
 
 ### Leetcode
 #### 53 Maximum Subarray
@@ -189,8 +207,36 @@ while ((r= a mod b)>0){
 }
 return b
 ```
-    * Extended GCD: Euclid's Algorithm can also be used to find integers 𝑥 and 𝑦 such that $ax + by = gcd(a, b)$
-        * gcd(74, 44): $30=1*74+(−1)*44, 14=44–30=1*44–(1*74+(−1)*44)=2*44+(−1)*74$<br>
+```Java
+euclid(a, b):
+    if b ==0:
+        return a
+    return euclid(b, a%b)
+```
+    * Prove that given a positive integer a and a non-negative integer b, the number d that Euclid’s algorithm outputs is in fact gcd(a, b).<br>
+    Part 1. By definition, denote that $a= gcd(a, b)\times  p, b = gcd(a, b)\times q, p \in N^+, q \in N^+$<br>
+    $a-b = (p-q) \times gcd(a, b)$<br>
+    Therefore, $gcd(a, b)$ is the divisor of $a-b$.<br>
+    Denote that $b = m \times gcd(b, a-b), a-b = n \times gcd(b, a-b)$<br>
+    $a = (m+n) \times gcd(b, a-b)$<br>
+    Therefore, $gcd(b, a-b)$ is the divisor of $a$.<br>
+    As a is divisible by $gcd(a, b)$ and $gcd(b, a-b)$ and $gcd(a, b)$ is the greatest common divisor of a and b,<br> $gcd(a, b) \geq gcd(b, a-b)$<br>
+As a-b is divisible by $gcd(a, b)$ and  $gcd(b, a-b)$ and $gcd(b, a-b)$ is is the greatest common divisor of b and a-b,<br>
+$gcd(a, b) \leq gcd(b, a-b)$<br>
+Therefore, $gcd(a, b) = gcd(b, a-b)$<br>
+$gcd(a, b) = gcd(b, a-b)= gcd(b, a-2b) = ...= gcd(b, a \%b)$<br>
+Thus, $gcd(a, b) = gcd(b, a \%b)$<br>
+We prove that Euclid's algorithm outputs is in fact $\mathrm{gcd}(a,b)$.<br><br>
+Part 2. Using the strong induction to prove that given a  positive integer $a$ and a non-negative integer $b$, the number $d$ that Euclid's algorithm outputs is in fact $\mathrm{gcd}(a,b)$.<br>
+BC: For $\forall a > 0,$ when $b = 0, euclid(a, b)= a$. a is in fact $gcd(a, 0)$. By definition of 0, a is a factor of 0.<br>
+IH: Assume that for $\forall a > 0, n \in N^+, \forall b \leq n,  euclid(a, b) =gcd(a, b)$<br>
+IS: For $b = n+1, a\%b < b= n+1,$ so $a\%b \leq n$, using IH, euclid algorithm,$ gcd(a, b) = gcd(b, a \%b)$<br>
+$euclid(a, b) = euclid(b, a \%b) = gcd(b, a\%b)= gcd(a, b)$<br>
+In conclusion, we proved that given a  positive integer $a$ and a non-negative integer $b$, the number $d$ that Euclid's algorithm outputs is in fact $\mathrm{gcd}(a,b)$.<br>
+
+
+* Extended GCD: Euclid's Algorithm can also be used to find integers 𝑥 and 𝑦 such that $ax + by = gcd(a, b)$
+     * gcd(74, 44): $30=1*74+(−1)*44, 14=44–30=1*44–(1*74+(−1)*44)=2*44+(−1)*74$<br>
         $2= 30–2*14=(1*74+(−1)*44)–2*(2*44+(−1)*74)=3*74+(−5)*44$
 
 ### Leetcode
@@ -222,7 +268,7 @@ Divide and Conquer Paradigm
 - Solve the problem in each of the halves (Conquer)
 - Put together solution to the whole problem (Combine)
 
-Merge sort: Sorting algorithm designed as above
+**Merge sort**: $O(logn)$
 - Split input array into two halves
 - Sort each half separately
 - Combine the sorted arrays
@@ -289,7 +335,7 @@ $$T(1)=0$$
     
 ![](rtree1.png)
 
-**Master Theorem**:
+### Master Theorem
 
 Let $T(n)$ be a monotonically increasing function that satisfies
 
@@ -299,9 +345,9 @@ $T(1) = d$
 
 where $a \geq 1, b \geq 2, d> 0$. 
 
-If $f(n) \in \Theta(n^c)$ where $c \geq 0$, then 
+If $f(n) \in \Theta(n^c)$ where $c \geq 0$, then the recurence 
 
-the recurence $T(n) \leq aT(\frac{n}{b}) + n^c$ has solution:
+$T(n) \leq aT(\frac{n}{b}) + n^c$ has solution:
 
 $T(n) = \Theta(n^c)$ if $a < b^c$
 
@@ -316,16 +362,20 @@ You cannot use the Master Theorem if
 
 Note here, Master Theorem does not solve a recurrence relation.
 
+**Corollary**
+
+If $f(n) \in \Theta(n^{log_b^a} log^k n)$ for some $k \geq 0$ then $T(n) \in \Theta(n^{log_b^a} log^{k+1}n)$
+
 **Understanding:**
 
 $T(n) \leq aT(\frac{n}{b}) + n^c$
 
 Root level: $n^c$ as addition <br>
-Second level: $ a (\frac{n}{b})^c = \frac{a}{b^c} n^c$<br>
+Second level: $ a (\frac{n}{b})^c = \frac{a}{b^c} n^c$ !!!<br>
 $\frac{a}{b^c}$ is the ratio between successive levels<br>
 
 Numbers of leaves:<br>
-Number of levels: $log_b n$<br>
+Number of levels: $log_b n$ <br>
 Number of nodes: multiplied by 𝑎 at each level <br>
 Number of leaves: $a^{log_b n} = n^{log_b a}$<br>
 
@@ -335,31 +385,33 @@ Ratio $< 1$, dominate contribution: root level<br>
 Ratio $= 1$, every level is contributing equally<br>
 Ratio $> 1$, dominate contribution: leaves level<br>
 
-EX1: $T(n) \leq T(\frac{n}{4}) + T(\frac{3n}{4}) + n$<br>
-Draw the tree. Each level additions as n <br>
-find the branch drop slowest. Each level Number of Levels: $log_{\frac{4}{3} } n$<br>
+1. $T(n) = 6 T(\frac{n}{2}) + n^3$<br>
+As master theroem, $a=6, b=2, c=3, a = 6 < b^c= 2^3=8, T(n) = \Theta(n^3)$  
+
+
+2. $T(n) \leq T(\frac{n}{4}) + T(\frac{3n}{4}) + n$<br>
+Draw the recusion tree. (Master theroem doesn't apply)<br>
+Each level contributes $\frac{1}{4}n + \frac{3}{4}n= n$ . The trending is to keep the same. <br>
+find the branch drop slowest.  Number of Levels: $log_{\frac{4}{3} } n$<br>
 $T(n) = O(nlogn)$
 
-Ex2: $T(n) \leq T(\frac{n}{5}) + T(\frac{7n}{10}) + n$<br>
-1st level: n; 2nd level: $\frac{9}{10}$ decreasing<br>
-$T(n) \leq kn, T(n) = \Theta(n)$
 
-**Corollary**
+3. $T(n) \leq T(\frac{n}{5}) + T(\frac{7n}{10}) + n$<br>
+Draw the recusion tree. (Master theroem doesn't apply)<br>
+Root level: n<br>
+2nd level: $\frac{1}{5} + \frac{7}{10} = \frac{9}{10}$ decreasing<br>
+Claim: $T(n) \leq kn$<br>
+Proof by induction: $T(n/5) \leq \frac{kn}{5}, T(7n/10) \leq \frac{k7n}{10}$<br>
+Hence, $T(n) \leq k(\frac{9n}{10}) + n \leq kn$, when $k \geq 10$<br>
+$T(n)= O(n)$
 
-If $f(n) \in \Theta(n^{log_b^a} log^k n)$ for some $k \geq 0$ then $T(n) \in \Theta(n^{log_b^a} log^{k+1}n)$
 
-###  Chip Testing
-
-**The Chip Testing Problem**
-- This problem is motivated by VLSI chip design.
-- In each batch of chips produced, some chips are good and some are bad (faulty).
-- Given a set of 𝑛 chips, we want to correctly determine the status of each chip.
-
-What tool do we have at our disposal?
-- We have a tester where you can plug in a pair of chips and have them test each other.
-
-Goal: Design an algorithm to correctly identify the status of each chip as good/bad using a small number of
-pairwise tests.
+4. $T(n) = T(n/2) + logn$<br>
+Draw the recusion tree. (Master theroem doesn't apply)<br>
+Root level: log(n)<br>
+2nd level: log(n/2)<br>
+$lim \frac{log(n)}{log(n/2)}=1$<br>
+$T(n) = 1 + log(2) + log(4)... + log(n/2) + log(n) \leq log(n) * log(n) = log^2n$
 
 **Modular Arithmetic and Cryptography (RSA)**
 
@@ -398,7 +450,7 @@ Deterministic linear-time selection - Section 9.3 of CLRS
 
 Search for an element 𝑥 in an array (Scan all): $O(n)$
 
-**BINARY SEARCH**
+**BINARY SEARCH** (sorted array)
 
 Idea: Comparing 𝑥 to middle element of array eliminates half the array knowing that the array is sorted.
 
@@ -429,9 +481,11 @@ ANALYZING A RANDOMIZED ALGORITHM
 - This is the expected worst-case behavior of the algorithm.
 - What is the philosophy? The input is not in the algorithm’s control, but we expect to not be too unlucky with our coin tosses
 
+
+
 ### Quicksort & Quickselect
 
-**Quick Sort**
+####  Quick Sort
 
 ``Algorithm Idea:``
 1. Choose a “pivot” element $𝑥$ at random.
@@ -455,7 +509,8 @@ If we always get a good partition:
 - $T(n) = T(\frac{n}{2})+ T(\frac{n}{2}) + O(n) = O(nlogn)$, similar to merge sort.
 Instead of analyzing either extreme, we analyze the expected time.
 
-Average: $O(nlogn)$
+Average: $O(nlogn)$<br>
+Worst: $O(n^2)$
 
 Key observations:
 - Any two elements are never compared more than once.
@@ -463,7 +518,7 @@ Key observations:
 ways” in the recursion.
     
 
-**Quick Select**
+#### **Quick Select**
 
 Goal: select the $𝑘$ th smallest (“rank 𝑘”) element of an array
 
@@ -473,8 +528,8 @@ Goal: select the $𝑘$ th smallest (“rank 𝑘”) element of an array
     - Time required: $𝑂(nlogn)$
 - Key idea: when we partition 𝐴, we only need to recurse on the side of the 𝑘𝑘th smallest element.
 
-Algorithm Idea: (We are looking for the 𝑘th-smallest element)
-1. Choose a “pivot” element 𝑥𝑥 at random.
+QuickSelect Algorithm Idea: (We are looking for the 𝑘th-smallest element)
+1. Choose a “pivot” element 𝑥 at random.
 2. Compare all elements to the pivot.
 3. Partition all elements into two sets:
     - S (elements smaller than 𝑥𝑥) and L (elements larger than 𝑥𝑥)
@@ -484,9 +539,27 @@ If $𝑘 < 𝑖$, recurse on the elements to the left of x<br>
 If $𝑘 > 𝑖$, recurse on the elements to the right of x
 
 Run time:
+- Quickselect is faster than finding the rank-𝑘 element using quicksort.
+- Quickselect is randomized.
+
+
 - Worst-case Performance: $O(n^2)$
 - Best-case Performance: $O(n)$
 - Average Performance: $O(n)$
+
+
+- Run time analyze:
+    * Let $e_k$ denote the k th smallest element in the array, calculate the prob that $e_i$ and $e_j$ are compared as event $X_{ij} =1$ when selecting $e_k$
+        * case 1: $k < i < j, Pr[X_{ij}] = \frac{2}{j-k+1}$
+            * $e_i$ and $e_j$ are compared when either $e_i$ or $e_j$ is selected as the pivot.
+            * $𝑒_𝑖$ and $𝑒_𝑗$ are not compared when any other element between $e_k$ and $e_j$ is selected.
+        * case 2: $i < k < j, Pr[X_{ij}] = \frac{2}{j-i+1}$
+        * case 3: $i< j < k, Pr[X_{ij}]= \frac{2}{k-i+1}$
+        * $E[X] = \sum_{i < j \leq k} \frac{2}{k-i+1} + \sum_{i < k < j} \frac{2}{j-i+1} + \sum_{k \leq i < j} \frac{2}{j-k+1} = O(n)$
+
+
+* Suppose we are doing QuickSelect where we are searching for the 100th-smallest element in an array. What is the probability that the smallest element is compared to the second smallest element?
+    * i=1, j = 2, k =100, $Pr[X_{12}= 1]= \frac{2}{100+1-1}=\frac{1}{50}$
 
 ### Deterministic Linear Time Selection
 
@@ -515,7 +588,9 @@ $T(n) \leq T(\frac{n}{5}) + T(\frac{7n}{10}) + cn$
 - $T(\frac{n}{5})$ is for recursively finding median of medians.
 - $T(\frac{7n}{10})$ is for solving the recursive subproblem.
 - $cn$ is for finding the median of $n/5$ groups of 5 elements and for pivoting/partitioning on $m^*$.
-    - • Note: median of 5 elements takes 7 comparisons, c = 2.4 suffices
+    -  Note: median of 5 elements takes 7 comparisons, n+ $\frac{7}{5}n= 2.4n$ c = 2.4 suffices
+        - compare every element with $m^*$ when we are pivoting, it takes n comparation
+    - This may not be 7 steps, but it was what I was able to conjure from my head. Consider 5 values: a,b,c,d,e. Sort the first two pairs. (2) Order the pairs with respect to their next, larger element. (1) We know a<b<d and c<d. Now there are 3 elements less than d, hence d can't be the median, as it is at least the fourth element in the array. WLOG say c<e and we know that a < b from our first two comparisons. Order the pairs with respect to their next, larger element. WLOG a<b<e and c<e. Compare the elements c,b; the greater of the two elements has to be the median. (3) The numbers in the parentheses at the end of the paragraphs are the number of comparisons made in that portion.
     
 SOLVING THE RECURRENCE
 - Base Cases: (trivial)
@@ -578,18 +653,21 @@ Hashing - Chapter 11 of CLRS
 
 - **Priority queues**: dequeue elements in order of priority (not arrival time)
     - Example: operating systems scheduling jobs of highest priority
-    - Operations:
-        - Insert
-        - Extract-min
-        - Decrease-key
+    - Operations using Binary Heap:
+        - Insert(), Delete(), Extract-min() remove min but keep heap property, Extract-Max(), Decrease-key(), decreaseKey(): $O(logn)$ time
         
-        
-- Heap: Implementation of priority queues
+A Heap is a special Tree-based data structure in which the tree is a complete binary tree.
+
+- Min-Heap: Implementation of priority queues
     - ``Key at parent < key at children``
     - Root has minimum key (highest priority)
-    - Find-min is easy
+    - Find-min is easy: $O(1)$
     - Tree should have low height
     - Quick repairs after extract-min and insert
+    - In a Min-Heap the key present at the root node must be minimum among the keys present at all of it’s children. The same property must be recursively true for all sub-trees in that Binary Tree.
+
+
+- Max-Heap:  In a Max-Heap the key present at the root node must be greatest among the keys present at all of it’s children. The same property must be recursively true for all sub-trees in that Binary Tree.
 
 
 - Heap Structure:  To keep low height, the shape of heap should be close to a complete binary tree.
@@ -598,8 +676,24 @@ Hashing - Chapter 11 of CLRS
         - Every internal node has 2 children.
         - All leaves are at the same level.
         - Number of nodes at level j is $2^j$
+            - Root - level 0, height =1: $2^0=1$
+            
         - A height: l complete binary tree has $2^{l+1} - 1$ nodes
-  
+        
+        
+- Heaps as arrays: the (nearly) complete structure of heaps allows us to represent them as arrays.
+    - The root element will be at $Arr[0]$
+    - indexes of other nodes for the ith node, i.e., $Arr[i]$:
+        - $Arr[(i-1)/2]$	Returns the parent node
+        - $Arr[(2*i)+1]$	Returns the left child node
+        - $Arr[(2*i)+1]$	Returns the left child node
+    - Simple array index arithmetic can take the place of following parent and child pointers.
+        - Assume array indices start at 1.
+        - Imagine numbering the elements level by level and left to right, starting with the root.
+        - parent(𝑖) will be at index $|\frac{i}{2}|$
+        - left-child(𝑖) will be at index 2𝑖
+        - right-child(i) will be at index 2𝑖+1.
+
   
 - Heap Shape:
 ![](heap1.png)
@@ -607,31 +701,58 @@ Hashing - Chapter 11 of CLRS
     - Insert(6):
     ![](heap2.png)
     - Extract-Min
+    ![](heap3.png)
+    ![](heap4.png)
   
   
 - Min-heap Analysis
-    - Both percolate-up and percolate-down take time proportional to the height of the heap. What is the height?
-    - A heap of height $h$ is complete up to level $h-1$ and contains at least $2h$ nodes (including at least 1 node at level $h$).
+    - Both percolate-up  过滤 and percolate-down take time proportional to the height of the heap. What is the height?
+    - A heap of height $h$ is complete up to level $h-1$ and contains from $2^h$ to $2^{h+1}-1$ nodes (including at least 1 node at level $h$).
     - Flipping this statement around, a heap with $n$ nodes has height at most $logn$.
     - So all heap operations are $𝑂(logn)$.
-    
-    
+    - GetMini(): It returns the root element of Min Heap. Running time: $O(1)$    
+  
+  
 - Heapsort
     - Heap operations are $𝑂(nlogn)$.
     - To sort n elements, insert them all into an initially empty heap.
     - Repeatedly extract min and output it.
     - 2𝑛 operations ⇒ running time is $𝑂(nlogn)$
-    - This is as good as MergeSortin the worst-case.
-    
-    
-- Heaps as arrays
-    - The (nearly) complete structure of heaps allows us to represent them as arrays.
-    - Simple array index arithmetic can take the place of following parent and child pointers.
-        - Assume array indices start at 1.
-        - Imagine numbering the elements level by level and left to right, starting with the root.
-        - parent(𝑖) will be at index $|\frac{i}{2}|$
-        - left-child(𝑖) will be at index 2𝑖
-        - right-child(i) will be at index 2𝑖+1.
+    - This is as good as MergeSort in the worst-case.
+
+
+- Build a binary heap: $O(n)$ [link](https://www.geeksforgeeks.org/time-complexity-of-building-a-heap/)
+```Java
+BUILD-HEAP(A) 
+    heapsize := size(A); 
+    for i := floor(heapsize/2) downto 1 
+        do HEAPIFY(A, i); 
+    end for 
+END
+```
+
+
+* You are given an array $A[1..n]$ of n distinct elements such that each element in A is at most k positions away from its position in the sorted order $(2 \leq k < n)$.<br>
+Design an algorithm to sort the array $O(n log k)$ time.<br><br>
+
+    * **Algorithm**: Create an empty min-heap of size k + 1 and fill it up with the first k + 1 values of the array. Create a (initially empty) list to store the sorted result. Extract the minimum value in the heap and append it to the result list. Then insert the next (not yet inserted) value in A into the min-heap. Repeat this process until all values in A have been inserted into and then extract from the min-heap. Return the sorted list.
+    * **Correctness**: Note: Let the rank of an element in A denote its index (position) in the sorted result. We claim that for all $i \in [1..n]$, the rank-i element is correctly placed in the output array.<br>
+    <u>Base Case</u>: The element with rank 1 is the minimum of A. Since this rank-1 element is at most k positions away from index 1, it must be within the first k + 1 positions of A. Then when we extract the minimum value from the min-heap, we will correctly place the rank-1 element in position 1.<br>
+    <u>Induction Hypothesis</u>: Suppose that our result list has the correctly placed numbers in positions up to index (i - 1).<br>
+    <u>Induction Step</u>: Just after the algorithm has correctly placed numbers in position up to index i - 1, the heap can only contain elements whose original location in A is between i - k and i + k, inclusive. Since no element could have been more than k positions away from its rank, the rank-i element must already be in the heap. Also, since all elements with rank less than i are already in the sorted result list (and therefore not in the heap), the algorithm will then (correctly) extract the rank-i element next.
+    * **Running Time**: Note that each of the n elements is inserted and then extracted from the heap (with size k + 1) exactly once. Thus, the total runtime is O(n log k).
+
+* In a min heap we want to answer the following query: Given k and x, is the k th-smallest element in the heap less than x? Design a $O(k)$ algorithm for solving this problem
+    * **Algorithm**: Initialize the counter to 0. <br>
+    For node $v$ loop starting from the root,<br>
+        $\space\space$ if (value at v < x) {counter++, explore its left and right}<br>
+        $\space\space$ else {abort the exploration of the subtree at v.}<br>
+        $\space\space$ if (counter = k) {return Yes}<br>
+    return No (else if there are no nodes to explore)
+    * **Running Time**: For the analysis, let S be the set of nodes we explore whose values are less than x.<br>
+    $|S| \leq k$. Also, for any node we explore (other than the root), its parent must be in S.<br>
+    Thus, there are at most 2|S| additional nodes we explore.<br>
+    Thus the total number of nodes explored is at most 3k and the algorithm is $O(k)$.
 
 ### Binary Search Tree
 
@@ -690,10 +811,10 @@ Hashing - Chapter 11 of CLRS
         
     
 
-* Chaining: maintain each location as a linked list and resolve collisions by chaining as collision resolution
+* Chaining: maintain each location as a linked list and resolve collisions by chaining as best collision resolution
     * The time to do dictionary operations (insert, delete, find) depends on the lengths of the chains at each location.
     * the expected length of chains i.e. number of elements hashing to the same location: exactly the load factor $\alpha = m/n$
-    * If we choose the size 𝑛𝑛of the hash table to be twice as large as the number of items 𝑚𝑚that will ever be hashed, then the expected length is $𝑂(1)$ and all operations take expected $𝑂(1)$ time.
+    * If we choose the size $n$ of the hash table to be twice as large as the number of items 𝑚𝑚that will ever be hashed, then the expected length is $𝑂(1)$ and all operations take expected $𝑂(1)$ time.
     * Remember that the worst-case is still bad. It is $𝑂(𝑛)$.
 
 
@@ -702,6 +823,9 @@ Hashing - Chapter 11 of CLRS
         * Linear probing 探查: successively probe locations $l+1, l+2$, etc., wrapping around the table if necessary, and put x in the first free location.
         * Quadratic probing: Successively probe locations $l+1, l+4, l+9,$ etc., wrapping around the table if necessary, and put x in the first free location.
         * Double hashing: choose a second hash function $g$ and probe $l+ g(𝑥), l+2g(x)$, etc. until you find a free location.
+
+* To use hashing when we want to be able to insert and delete elements, what is the best collision resolution scheme?
+    * The best collision resolution scheme is chaining. With open addressing, the rules of where to insert an element x depend on what positions in the hash table are occupied. If we later delete an element y that was encountered when inserting x, it will be difficult to find x again
 
 Midterm 1
 
@@ -794,11 +918,18 @@ Directed Graph facts
 - In DAGs, every vertex is in an SCC by itself.
 - The interface for directed graphs is similar to the interface for undirected graphs.
 
+* Consider all directed graphs with k strongly connected components.
+    * If you add one edge to such graphs, what is the minimum number of strongly connected components that (at least) one of the graphs can attain? 1
+        * if a graph has k strongly connected components $C_1, C_2, \dots, C_k$ such that there are edges $(C_1, C_2), (C_2, C_3),..., (C_{k-1}, C_k)$ in the component graph, then adding an edges from a vertex in $C_k$ to a vertex in $C_1$ will make the entire graph strongly connected
+    * If you add one edge to such graphs, what is the maximum number of strongly connected components that (at least) one of the graphs can attain? k
+        * We certainly cannot increase the number of strongly connected components when we add an edge, but we can possibly decrease it. However, we can also leave the number of strongly connected components unaffected by adding an edge within a component or adding an edge between components so as to not create any cycles.
+
 - Suppose you are exploring a neighborhood in a new city:
     - You might walk as far as you can down each path, turning around when stuck (DFS)
     - You might only explore nearby spots before venturing further (BFS)
 
 ### Depth-first Search
+深度优先
 
 ![](dfs1.png)
 
@@ -809,7 +940,27 @@ DFS discovers components
 Proof: Suppose for contradiction that a vertex in the v's component is not visited.<br> Let u be the unvisited vertex that is the fewest hops away from v. v------w-u<br>
 w must have been visited, and from there u. Contradiction!
 
+DFS on undirected graph
+![](dfs2.png)
 
+DFS on directed graph
+- Same idea as for undirected graphs
+- Outer procedure is called DEPTH-FIRST-SEARCH
+- Invokes inner procedure DFS on any still unvisited node
+- Tree edges are still edges on which new vertices discovered
+- There can be:
+    - Back edges (from descendants to ancestors)
+    - Forward edges (from ancestors to descendants)
+    - Right-to-left cross edges
+- But no left-to-right cross edges
+
+![](dfs3.png)
+![](dfs4.png)
+
+* Run DFS on the directed graph $G=(V,E)$ starting at node 1 to compute the resulting discovery and finish times of each node. The discovery and finish times of node 1 should be 1 and 2n, respectively. <br>
+Whenever multiple arbitrary neighbors are considered to discover, select the neighbor with a lower label. Remember that time only advances when you discover a new node or finish the dfs at a node. If you discover a node v and there is nothing to discover from there, then the finish time of v is 1 more than the discovery time of v.<br> $V = \{1, 2, 3, 4, 5\}, E=\{(1,2),(1,3),(2,4),(4,3),(4,5)\}$
+    * The discovery time of node 4 = 3, discover(1), discover(2), discover(4).
+    *  the finish time of node 4 is: The DFS proceeds as follows: discover(1), discover(2), discover(4), discover(3), finish(3), discover(5), finish(5), finish(4)
 
 Running time of DFS
 - Every edge examined once (twice for undirected graphs) $O(m)$
@@ -817,7 +968,49 @@ Running time of DFS
 - Total running time $𝑂(n + m)$
 - For connected graphs: $𝑚 ≥ 𝑛 − 1$ so it simplifies to $𝑂(𝑚)$
 
+Sources and Sinks in DAGs
+- DAG: Directed Acyclic Graph
+- Call a node $v$ source if it has no incoming edges and a sink if it has no outgoing edges.
+- Fact: DAGs always have sources and sinks.
+- Proof:
+    - Suppose not. Then start from some vertex 𝑣𝑣and walk along its edges.
+    - Either the walk terminates, or we repeat a vertex.
+    - But repeating a vertex would imply a cycle, which we assume not to be the case (DAG).
+    - Thus we terminate at a sink, so a sink exists!
+    - Showing a source exists can be done by walking backward on edges.
+
+1. When performing dfs on an undirected n-node graph starting at node v, the finish time of v will be 2n. False
+    * If the graph is not connected, the finish time of v may be less than 2n.
+2. When performing dfs on a connected undirected n-node graph starting at node v, the finish time of v will be 2n. True
+    * v will not finish until all of the vertices in its connected component are finished, at which point v will finish at time 2n
+3. When performing dfs on a directed n-node graph starting at node v, the finish time of  v will be 2n. False
+    * For example, if v is an isolated vertex, then v will have finish time 2.
+4. Suppose G is an n-node directed graph such that for each pair of nodes (x,y) there is either a path from x to y or a path from y to x or both. Then, when dfs is started at node v, the finish time of v will be 2n. False
+    * In both bfs and dfs, each vertex and edge is explored a constant number of times.
+5. There are graphs for which bfs will be asymptotically faster than dfs.
+    * n both bfs and dfs, each vertex and edge is explored a constant number of times.
+6. Determining whether there is an edge between two vertices u and v can be performed faster in the adjacency list representation than in the adjacency matrix representation. False
+    * In an adjacency list representation, checking the existence of an edge can take $Θ(n)$ time, while it always takes $Θ(1)$ time in an adjacency matrix representation.
+7. In any directed graph G, if there exists a path from u to v, then any DFS traversal will find that the discovery time of v is less than the finish time of u.False
+    * If you run DFS from a, then u's discovery and finish time are both before v's discovery time. However, there is a path from u to v.
+    ![](dfs5.png)
+
+
 ### Breadth-first Search
+广度优先
+
+* BREADTH-FIRST SEARCH
+    - Imagine that a large sound is made at the starting vertex.
+    - In what order would the sound wave reach the other vertices?
+    - Intuitively, this is order in which breadth-first search visits vertices.
+    - Algorithmically, BREADTH-FIRST-SEARCH(v) puts all neighbors of $v$ in a queue
+    - It processes vertices in queue order.
+    - So neighbors of $v$ will be visited before neighbors of neighbors of $v$.
+
+1. BFS correctly computes shortest paths on weighted graphs when all edges have equal (positive) weights. True
+    * When all edge weights are equal, the order of distances when measured by number of edges or by sum of weights on the path is the same; the distances equal the number of edges multiplied by the equal constant weight.
+2. BFS correctly computes shortest paths on weighted graphs that are trees.
+    * There is only one path between any two vertices in a tree. Thus, the paths that BFS computes must also be the shortest paths
 
 ## M7: Greedy Algorithms
 
