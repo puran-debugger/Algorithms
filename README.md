@@ -1006,6 +1006,27 @@ Sources and Sinks in DAGs
     - Algorithmically, BREADTH-FIRST-SEARCH(v) puts all neighbors of $v$ in a queue
     - It processes vertices in queue order.
     - So neighbors of $v$ will be visited before neighbors of neighbors of $v$.
+    
+![](bfs1.png)
+![](bfs2.png)
+
+Properties of BFS
+
+- If $u$ is enqueued while exploring $v$ then $level(u)=level(v)+1$
+- All non-tree edges are between vertices whose levels differ by at most 1.
+- Vertices in a level are explored consecutively.
+- Vertices are explored in order of levels.
+- $level(u)$ is the distance from c (the starting vertex) to u.
+- Distance = number of edges in shortest path from c to u.
+- Key application of BFS: shortest paths from source vertex.
+
+Shortest Paths from Node v
+- Invoke BFS from node $v$.
+- The level number of $u$ tells us the length of the shortest path from $v$ to $u$.
+- Important point: here the length of a path is just the number of edges on it.
+- Later, we will consider graphs with weights on the edges.
+- The total weight of a path is the sum of the weights of the edges on the path.
+- BFS does not work for finding shortest paths in such graphs.
 
 1. BFS correctly computes shortest paths on weighted graphs when all edges have equal (positive) weights. True
     * When all edge weights are equal, the order of distances when measured by number of edges or by sum of weights on the path is the same; the distances equal the number of edges multiplied by the equal constant weight.
@@ -1014,7 +1035,7 @@ Sources and Sinks in DAGs
 
 ## M7: Greedy Algorithms
 
-This module introduces the idea of optimization problems and explores a particular approach to such problems: greedy algorithms. We will explore when such algorithms are applicable, and if so, how to prove they are correct. As examples, we will show two canonical problems: job scheduling and interval scheduling. The module closes by analyzing Huffman Coding, a data compression scheme which uses a greedy algorithm.
+This module introduces the idea of optimization problems and explores a particular approach to such problems: greedy algorithms. We will explore when such algorithms are applicable, and if so, how to prove they are correct. As examples, we will show two canonical 典范 problems: job scheduling and interval scheduling. The module closes by analyzing Huffman Coding, a data compression scheme which uses a greedy algorithm.
 
 Learning Objectives
 - Discuss the particular examples of greedy algorithms shown.
@@ -1024,6 +1045,101 @@ Learning Objectives
 - Understand the Exchange and Progress arguments to prove correctness of greedy algorithms.
 - Create correct greedy algorithms for new problems.
 - Explain the concept of greedy algorithms.
+
+### Optimization
+
+- Most important need for algorithms:
+    - Finding the best solution given the constraints.
+- Examples:
+    - Find the best-rated restaurant within five miles.
+    - Buy items that give you the greatest total value within your budget.
+    - Locate k hospitals in a city to minimize the distance to the nearest hospital.
+    - Compute the shortest path from a starting point to a destination.
+- For each example, there is a set of feasible solutions.
+    - For restaurant selection, feasible solutions are all restaurants within five miles.
+    - For the shortest path, feasible solutions are all paths from start to destination.
+    
+    
+    
+- Objective function: a function that associates a quality to each solution(although the function may also be defined on infeasible solutions).
+- Optimization: find a feasible solution with minimum or maximum objective function value
+    - Minimum for problems where objective function is cost(e.g. the cost of a path is its length: we want to find the path of minimum cost).
+    - Maximum for problems where objective function is reward(e.g. the objective function is restaurant quality: we want the restaurant of maximum quality).
+* constrains
+    - Best restaurant within five miles:
+        - Constraint –feasible solutions are restaurants within a five mile radius
+    - Shortest path from sto t:
+        - Constraint –feasible solutions are paths from sto t
+    - Locating hospitals:
+        - Constraint –must locate khospitals at valid locations in the city    
+
+- Brute force
+    - For every feasible solution, compute the objective function and keep the best.
+    - Problem: there might be infinitely many feasible solutions!…or at least too many to do this efficiently.
+- Heuristic 启发式 approaches
+    - Don’t necessarily consider all feasible solutions.
+    - Instead, build one that “looks good…”
+        - Don’t find the very best restaurant within five miles; instead settle for one with a rating above four.
+        - Don’t consider all possible locations for hospitals; instead decide to locate them in k“central” neighborhoods.
+- In this course, we are not fans of either brute force or heuristic approaches.
+- One common theme:
+    - To solve the problem on a certain input x…
+    - …use solutions for inputs of smaller size.
+    - Many manifestations of this idea give rise to different algorithm design paradigms, some of which we have already seen.
+ 
+
+- ALGORITHM DESIGN PARADIGMS
+    - **Algorithm design by induction**: For input of size n, build from a solution on input of size n-1.
+    - **Divide-and-conquer**: Split input into halves and solve each half. Then put the solutions together.
+    - **Greedy algorithms**: For problems where a solution is defined by a series of decisions,make the first decision “shortsightedly” and recurseon a smaller input size.
+    - **Dynamic programming**: Solve all “relevant” subproblems and combine them to solve onthe original input
+    - Analysis： 
+        - All these approaches examine only a limited number of feasible solutions, hence they can be efficient.
+        - They also prove that the unexamined solutions must be worse than the examined ones. Thus they are provably optimal.
+        - An approach may or may not work for a given problem.
+        - There are also many problems where none of the above approaches work.
+
+### Greedy Algorithms
+- Solutions to some problems can be viewed as a series of decisions.
+- Example problem 1:
+    - $n$ jobs labeled $j_1, j_2,..., j_n$
+    - Job $j_i$ requires $t_i$ time
+    - Total time available is $T$
+    - Objective: find the largest subset of jobs that can be done in T time.
+- Sequential decision to find solution:
+    - What will the first job be? Call this the “top-level decision.”
+    - Once we decide, recurse on the remaining jobs and remaining time.
+- We ensure that the first decision we make will lead to an optimal solution, without needing to reverse the decision.
+    - It seems best to schedule the shortest job first and have the most time left for remaining jobs.
+    - Correct algorithm, or just a heuristic?
+    - If proven correct, this would be an example of a greedy algorithm, because we decide on the first job without thinking about the rest of the problem.
+
+
+- Recursive description:
+    - Find shortest job $j_i$
+    - Schedule it first
+    - Recurse on problem with remaining jobs and time $T - t_i$
+- Iterative description:
+    - Sort jobs in non-decreasing order of time
+    - Relabel jobs so that $t_1 \leq t_2 \leq ... \leq t_n$
+    - Schedule as many jobs as will fit, starting with the first
+- compare:
+    - Recursive description shows the greedy algorithm making a top-level decision and recursingon smaller input.
+    - Iterative description is probably easier to understand and implement.
+    - Will these two versions yield the same solution?
+        - Yes! If we follow the recursive algorithm, we see that it is picking jobs in increasing (non-decreasing) order of time.
+- Proving optimality: progress argument
+    - For every k, the first k jobs that the greedy solution picks are the k shortest jobs.
+    - Suppose the greedy solution ends up picking the Lshortest jobs for total time $\sum^L_{i=1}t_i \leq T$
+    - It couldn’t add the (L+1) th job, so $\sum^{L+1}_{i=1} t_i > T$
+    - So any set of $L+1$ jobs must have total time greater than $T$.
+    - The greedy algorithm is optimal.
+    - Progress argument: the greedy algorithm progresses as much as any other algorithm could.
+
+### Compression
+
+
+### Huffman Coding
 
 ## M8: Spanning Trees and Shortest Paths - Greedy Algorithms
 
